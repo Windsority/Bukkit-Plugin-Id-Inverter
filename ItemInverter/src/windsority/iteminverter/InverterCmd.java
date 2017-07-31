@@ -13,10 +13,10 @@ public class InverterCmd implements CommandExecutor{
 	
 	final String arg1Message = "Usage: /inverter <add|remove|list|detail|enable|disable>";
 	final String cmdArg1[] = {"add", "remove", "list", "detail", "enable", "disable"};
-	final String correctForm[] = {"Usage: /inverter add [Id] [公式名]", "Usage: /inverter remove [公式名]",
-								  "Usage: /inverter list", "Usage: /inverter detail [公式名]",
-								  "Usage: /inverter enable [玩家] [公式名]",
-								  "Usage: /inverter disable [玩家] [公式名]"};
+	final String correctForm[] = {"Usage: /inverter add [Id] [formula]", "Usage: /inverter remove [formula]",
+								  "Usage: /inverter list", "Usage: /inverter detail [formula]",
+								  "Usage: /inverter enable [player] [formula]",
+								  "Usage: /inverter disable [player] [formula]"};
 	final InverterMain plugin;
 	
 	public InverterCmd(InverterMain plugin) {
@@ -48,15 +48,15 @@ public class InverterCmd implements CommandExecutor{
 			//correct form: 1. /inverter detail [formula]
 			if (args[0].equalsIgnoreCase("detail")) {	
 				if (!showDetail(args[1], sender))
-					sender.sendMessage("公式不存在！");; 
+					sender.sendMessage("Formula doesn't exist!");; 
 				return true;	
 			}
 			
 			//correct form: 2. /inverter remove [formula]
 			if (args[0].equalsIgnoreCase("remove")) {	
 				if (removeFormula(args[1]))
-					sender.sendMessage("清除成功！");
-				else sender.sendMessage("公式不存在！");
+					sender.sendMessage("remove succeed!");
+				else sender.sendMessage("Formula doesn't exist！");
 				return true;	
 			}
 			
@@ -67,13 +67,13 @@ public class InverterCmd implements CommandExecutor{
 			//correct form: 1. /inverter add [Id] [formula]
 			if (args[0].equalsIgnoreCase("add")) {
 				if (plugin.getConfig().contains("formula." + args[2])) {
-					sender.sendMessage("此公式已存在！");
+					sender.sendMessage("Formula already exists!");
 					return true;
 				}
 				
 				//this commands can only be triggered by players
 				if (!(sender instanceof Player)) {
-					sender.sendMessage("你没有手!"); 
+					sender.sendMessage("You have no hands"); 
 					return true;
 				}
 				
@@ -81,13 +81,13 @@ public class InverterCmd implements CommandExecutor{
 				ItemStack item = player.getInventory().getItemInMainHand();
 								
 				if (item.getType().equals(Material.AIR)) {
-					sender.sendMessage("你什么物品都没有指定！");
+					sender.sendMessage("You are not setting anything!");
 					return true;
 				}
 				
 				if (addFormula(args[2], item, Integer.valueOf(args[1])))
-					sender.sendMessage("添加成功！");
-				else sender.sendMessage("公式名非法！");
+					sender.sendMessage("Addition succeed!");
+				else sender.sendMessage("Formula name wrong!");
 				
 				return true;
 			}
@@ -142,7 +142,7 @@ public class InverterCmd implements CommandExecutor{
 	}
 	
 	public void showList(CommandSender sender) {
-		sender.sendMessage("-------公式-------");
+		sender.sendMessage("-------formula-------");
 		Set<String> formulas =  
 				plugin.getConfig().getConfigurationSection("formula").getKeys(false);
 		if (formulas.size() == 0) sender.sendMessage("无");
@@ -161,7 +161,7 @@ public class InverterCmd implements CommandExecutor{
 		String tarItemName = Material.getMaterial(targetId).name();
 		
 		sender.sendMessage("公式" + formulaName + ":");
-		String message = "[" + sourceItemName + "] --转变为--> " + "[Id " + 
+		String message = "[" + sourceItemName + "] --convert to--> " + "[Id " + 
 						 Integer.valueOf(targetId).toString() +  ": " + tarItemName + "]";
 		sender.sendMessage(message);
 		return true;
