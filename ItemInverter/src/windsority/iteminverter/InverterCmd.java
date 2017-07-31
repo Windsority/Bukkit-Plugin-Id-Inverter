@@ -1,11 +1,15 @@
 package windsority.iteminverter;
 
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -48,7 +52,7 @@ public class InverterCmd implements CommandExecutor{
 			//correct form: 1. /inverter detail [formula]
 			if (args[0].equalsIgnoreCase("detail")) {	
 				if (!showDetail(args[1], sender))
-					sender.sendMessage("Formula doesn't exist!");; 
+					sender.sendMessage("Formula doesn't exist!");
 				return true;	
 			}
 			
@@ -85,22 +89,32 @@ public class InverterCmd implements CommandExecutor{
 					return true;
 				}
 				
-				if (addFormula(args[2], item, Integer.valueOf(args[1])))
+				if (!isNumeric(args[1])) sender.sendMessage("Id must be a number！");
+				int Id = Integer.valueOf(args[1]);
+				if (Id > 452 || Id < 1) {
+					sender.sendMessage("Id must be in range[1~452]！");
+					return true;
+				}
+				
+				if (addFormula(args[2], item, Id))
 					sender.sendMessage("Addition succeed!");
 				else sender.sendMessage("Formula name wrong!");
-				
 				return true;
 			}
 			
 			//correct form: 2. /inverter enable [player] [formula]
 			if (args[0].equalsIgnoreCase("enable")) {
-				enablePlayer(args[1], args[2]);
+				if (!enablePlayer(args[1].toLowerCase(), args[2]))
+					sender.sendMessage("Formula doesn't exist!");
+				else sender.sendMessage(ChatColor.ITALIC + "Enable " + args[1] + " formula " + args[2] + "!");
 				return true;
 			}
 				
 			//correct form: 3. /inverter disable [player] [formula]
 			if (args[0].equalsIgnoreCase("disable")) {
-				disablePlayer(args[1], args[2]);
+				if (!disablePlayer(args[1].toLowerCase(), args[2]))
+					sender.sendMessage("Formula doesn't exist!");
+				else sender.sendMessage(ChatColor.ITALIC + args[1] + " formula " + args[2] + " disabled!");
 				return true;
 			}
 			
@@ -131,12 +145,14 @@ public class InverterCmd implements CommandExecutor{
 	public boolean removeFormula(String formulaName) {
 		if (!plugin.getConfig().contains("formula." + formulaName))
 			return false;
-		Set<String> players = plugin.getConfig().getConfigurationSection("using").getKeys(false);
-		for (String player : players) {
-			if (plugin.getConfig().getString("using." + player) == formulaName)
-				plugin.getConfig().set("using." + player, null);
-		}
 		plugin.getConfig().set("formula." + formulaName, null);
+		ConfigurationSection usingSection = plugin.getConfig().getConfigurationSection("using");
+		Set<String> players = usingSection.getKeys(false);
+		for (String player : players) {
+			String path = player + "." + formulaName;
+			if (usingSection.contains(path))
+				usingSection.set(path, null);
+		}
 		plugin.saveConfig();
 		return true;
 	}
@@ -167,12 +183,41 @@ public class InverterCmd implements CommandExecutor{
 		return true;
 	}
 	
-	public static void enablePlayer(String playerName, String formulaName) {
-		
+	public boolean enablePlayer(String playerName, String formulaName) {
+		if (!plugin.getConfig().contains("formula." + formulaName))
+			return false;
+		ConfigurationSection formulaSection = plugin.getConfig().getConfigurationSection("formula");
+		ConfigurationSection usingSection = plugin.getConfig().getConfigurationSection("using");
+		Set<String> formulae = formulaSection.getKeys(false);
+		ItemStack sourceItem = formulaSection.getItemStack(formulaName + ".item");
+		for (String formula : formulae) {
+			if (formula == formulaName) continue;
+			ItemStack currentItem = formulaSection.getItemStack(formula + ".item");
+			if (currentItem.equals(sourceItem)) {
+				if (!usingSection.contains(playerName + "." + formula)) break;
+				usingSection.set(playerName + "." + formula, false);
+			}
+		}
+		usingSection.set(playerName + "." + formulaName, true);
+		plugin.saveConfig();
+		return true;
 	}
 	
-	public static void disablePlayer(String playerName, String formulaName) {
-		
+	public boolean disablePlayer(String playerName, String formulaName) {
+		if (!plugin.getConfig().contains("formula." + formulaName))
+			return false;
+		String path = "using." + playerName + "." + formulaName;
+		if (!plugin.getConfig().contains(path)) return true;
+		plugin.getConfig().set(path, false);
+		return true;
 	}
+	
+	public boolean isNumeric(String str){
+        Pattern pattern = Pattern.compile("[0-9]*");
+        Matcher isNum = pattern.matcher(str);
+        if(!isNum.matches())
+            return false;
+        return true;
+ }
 	
 }
