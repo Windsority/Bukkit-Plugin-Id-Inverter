@@ -4,7 +4,7 @@ author: Windsority
 main: windsority.iteminverter.InverterMain
 commands:
     inverter:
-        description: 改变你的物品Id
+        description: Change your item's 
         permission: ItemInverter.use
         usage: |
             /inverter
