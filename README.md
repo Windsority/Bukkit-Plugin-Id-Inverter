@@ -6,14 +6,14 @@ Minecraft Version: 1.12
 
 commands:
 /inverter add [target ID] [formula name]
-# create a formula which changes currently the ID of the kind of the item in your main hand to the target ID.
+#create a formula which changes currently the ID of the kind of the item in your main hand to the target ID.
 /inverter remove [formula name]
-# remove a formula
+#remove a formula
 /inverter list
-# show all formulae
+#show all formulae
 /inverter detail
-# especially show one formula in detail
+#especially show one formula in detail
 /inverter enable [player] [formula name]
-# enable the formula for the player
+#enable the formula for the player
 /inverter diable [player] [formula name]
-# disable the formula for the player
+#disable the formula for the player
