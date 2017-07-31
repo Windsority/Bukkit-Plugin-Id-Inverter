@@ -145,7 +145,7 @@ public class InverterCmd implements CommandExecutor{
 		sender.sendMessage("-------formula-------");
 		Set<String> formulas =  
 				plugin.getConfig().getConfigurationSection("formula").getKeys(false);
-		if (formulas.size() == 0) sender.sendMessage("无");
+		if (formulas.size() == 0) sender.sendMessage("none");
 		else for (String formula : formulas) sender.sendMessage(formula);
 	}
 	
@@ -160,7 +160,7 @@ public class InverterCmd implements CommandExecutor{
 		@SuppressWarnings("deprecation")
 		String tarItemName = Material.getMaterial(targetId).name();
 		
-		sender.sendMessage("公式" + formulaName + ":");
+		sender.sendMessage("formula" + formulaName + ":");
 		String message = "[" + sourceItemName + "] --convert to--> " + "[Id " + 
 						 Integer.valueOf(targetId).toString() +  ": " + tarItemName + "]";
 		sender.sendMessage(message);
