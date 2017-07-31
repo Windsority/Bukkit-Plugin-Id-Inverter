@@ -13,7 +13,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class InverterCmd implements CommandExecutor{
+public class InverterCmd implements CommandExecutor {
 	
 	final String arg1Message = "Usage: /inverter <add|remove|list|detail|enable|disable>";
 	final String cmdArg1[] = {"add", "remove", "list", "detail", "enable", "disable"};
@@ -212,12 +212,12 @@ public class InverterCmd implements CommandExecutor{
 		return true;
 	}
 	
-	public boolean isNumeric(String str){
-        Pattern pattern = Pattern.compile("[0-9]*");
-        Matcher isNum = pattern.matcher(str);
-        if(!isNum.matches())
-            return false;
-        return true;
- }
+	public boolean isNumeric(String str) {
+		Pattern pattern = Pattern.compile("[0-9]*");
+		Matcher isNum = pattern.matcher(str);
+		if(!isNum.matches())
+		    return false;
+		return true;
+ 	}
 	
 }
