@@ -4,17 +4,17 @@ author: Windsority
 main: windsority.iteminverter.InverterMain
 commands:
     inverter:
-        description: Change your item's 
+        description: 改变你的物品Id
         permission: ItemInverter.use
         usage: |
             /inverter
             --------------------------------------------
-            §r/inverter add [id] [formula] 
-            §r/inverter remove [formula] 
-            §r/inverter list
-            §r/inverter detail [formula] 
-            §r/inverter enable [player] [formula] 
-            §r/inverter disable [player] [formula] 
+            §r/inverter add [id] [公式名] §2增加将手持这种物品变为[id]的公式[公式名]
+            §r/inverter remove [公式名] §2移除公式[公式名]
+            §r/inverter list §2显示已有公式
+            §r/inverter detail [公式名] §2详细显示公式[公式名]
+            §r/inverter enable [玩家] [公式名] §2为[玩家]启用公式[公式名]
+            §r/inverter disable [玩家] [公式名] §2为[玩家]关闭公式[公式名]
             §r--------------------------------------------
 permissions:
     ItemInverter.use:

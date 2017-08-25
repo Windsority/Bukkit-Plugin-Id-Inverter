@@ -6,8 +6,9 @@ public class InverterMain extends JavaPlugin{
 	
 	@Override
 	public void onEnable() {
-		this.saveDefaultConfig();
-		this.getCommand("inverter").setExecutor(new InverterCmd(this));
+		saveDefaultConfig();
+		getCommand("inverter").setExecutor(new InverterCmd(this));
+		getServer().getPluginManager().registerEvents(new ItemListener(this), this);
 	}
 	
 	@Override
